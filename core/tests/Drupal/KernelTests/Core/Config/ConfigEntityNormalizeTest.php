@@ -16,9 +16,9 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test'];
+  public static $modules = ['config_test'];
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(static::$modules);
   }
@@ -39,7 +39,7 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
     $config_entity->save();
 
     $config = $this->config('config_test.dynamic.system');
-    $this->assertSame($config_entity->toArray(), $config->getRawData(), 'Stored config entity is equivalent to config schema.');
+    $this->assertIdentical($config_entity->toArray(), $config->getRawData(), 'Stored config entity is equivalent to config schema.');
   }
 
 }

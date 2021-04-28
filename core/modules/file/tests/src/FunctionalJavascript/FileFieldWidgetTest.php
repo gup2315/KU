@@ -40,7 +40,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser([
       'access content',
@@ -108,7 +108,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
             $check_field_name = $field_name;
           }
 
-          $this->assertSame($check_field_name . '_' . $key . '_remove_button', $button->getAttribute('name'));
+          $this->assertIdentical($button->getAttribute('name'), $check_field_name . '_' . $key . '_remove_button');
         }
 
         $button_name = $current_field_name . '_' . $delta . '_remove_button';

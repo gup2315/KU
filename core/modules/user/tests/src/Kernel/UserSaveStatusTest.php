@@ -17,9 +17,9 @@ class UserSaveStatusTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'field'];
+  public static $modules = ['system', 'user', 'field'];
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('user');
   }
@@ -37,12 +37,12 @@ class UserSaveStatusTest extends KernelTestBase {
 
     // Test SAVED_NEW.
     $return = $user->save();
-    $this->assertEqual(SAVED_NEW, $return, "User was saved with SAVED_NEW status.");
+    $this->assertEqual($return, SAVED_NEW, "User was saved with SAVED_NEW status.");
 
     // Test SAVED_UPDATED.
     $user->name = $this->randomMachineName();
     $return = $user->save();
-    $this->assertEqual(SAVED_UPDATED, $return, "User was saved with SAVED_UPDATED status.");
+    $this->assertEqual($return, SAVED_UPDATED, "User was saved with SAVED_UPDATED status.");
   }
 
 }

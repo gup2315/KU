@@ -21,7 +21,7 @@ class HistoryTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'history'];
+  public static $modules = ['node', 'history'];
 
   /**
    * {@inheritdoc}
@@ -42,7 +42,7 @@ class HistoryTest extends BrowserTestBase {
    */
   protected $testNode;
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
@@ -107,7 +107,7 @@ class HistoryTest extends BrowserTestBase {
     $response = $this->getNodeReadTimestamps([$nid]);
     $this->assertEquals(200, $response->getStatusCode());
     $json = Json::decode($response->getBody());
-    $this->assertSame([1 => 0], $json, 'The node has not yet been read.');
+    $this->assertIdentical([1 => 0], $json, 'The node has not yet been read.');
 
     // View the node.
     $this->drupalGet('node/' . $nid);
@@ -128,7 +128,7 @@ class HistoryTest extends BrowserTestBase {
     $response = $this->getNodeReadTimestamps([$nid]);
     $this->assertEquals(200, $response->getStatusCode());
     $json = Json::decode($response->getBody());
-    $this->assertSame([1 => $timestamp], $json, 'The node has been read.');
+    $this->assertIdentical([1 => $timestamp], $json, 'The node has been read.');
 
     // Failing to specify node IDs for the first endpoint should return a 404.
     $response = $this->getNodeReadTimestamps([]);

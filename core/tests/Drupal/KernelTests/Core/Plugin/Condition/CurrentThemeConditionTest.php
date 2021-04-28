@@ -15,7 +15,7 @@ class CurrentThemeConditionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'theme_test'];
+  public static $modules = ['system', 'theme_test'];
 
   /**
    * Tests the current theme condition.
@@ -31,8 +31,8 @@ class CurrentThemeConditionTest extends KernelTestBase {
     $condition_negated = $manager->createInstance('current_theme');
     $condition_negated->setConfiguration(['theme' => 'test_theme', 'negate' => TRUE]);
 
-    $this->assertEqual(new FormattableMarkup('The current theme is @theme', ['@theme' => 'test_theme']), $condition->summary());
-    $this->assertEqual(new FormattableMarkup('The current theme is not @theme', ['@theme' => 'test_theme']), $condition_negated->summary());
+    $this->assertEqual($condition->summary(), new FormattableMarkup('The current theme is @theme', ['@theme' => 'test_theme']));
+    $this->assertEqual($condition_negated->summary(), new FormattableMarkup('The current theme is not @theme', ['@theme' => 'test_theme']));
 
     // The expected theme has not been set up yet.
     $this->assertFalse($condition->execute());

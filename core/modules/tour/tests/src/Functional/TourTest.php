@@ -18,7 +18,7 @@ class TourTest extends TourTestBasic {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'block',
     'tour',
     'locale',
@@ -52,7 +52,7 @@ class TourTest extends TourTestBasic {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalPlaceBlock('local_actions_block', [
@@ -152,16 +152,16 @@ class TourTest extends TourTestBasic {
     // Ensure that a tour entity has the expected dependencies based on plugin
     // providers and the module named in the configuration entity.
     $dependencies = $tour->calculateDependencies()->getDependencies();
-    $this->assertEqual(['system', 'tour_test'], $dependencies['module']);
+    $this->assertEqual($dependencies['module'], ['system', 'tour_test']);
 
     $this->drupalGet('tour-test-1');
 
     // Load it back from the database and verify storage worked.
     $entity_save_tip = Tour::load('tour-entity-create-test-en');
     // Verify that hook_ENTITY_TYPE_load() integration worked.
-    $this->assertEqual('Load hooks work', $entity_save_tip->loaded);
+    $this->assertEqual($entity_save_tip->loaded, 'Load hooks work');
     // Verify that hook_ENTITY_TYPE_presave() integration worked.
-    $this->assertEqual('Tour test english alter', $entity_save_tip->label());
+    $this->assertEqual($entity_save_tip->label(), 'Tour test english alter');
 
     // Navigate to tour-test-1 and verify the new tip is found.
     $this->drupalGet('tour-test-1');

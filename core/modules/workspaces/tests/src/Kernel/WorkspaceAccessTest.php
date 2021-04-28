@@ -31,7 +31,7 @@ class WorkspaceAccessTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->installSchema('system', ['sequences']);
@@ -52,15 +52,11 @@ class WorkspaceAccessTest extends KernelTestBase {
    */
   public function operationCases() {
     return [
-      ['create', 'administer workspaces'],
       ['create', 'create workspace'],
-      ['view', 'administer workspaces'],
       ['view', 'view any workspace'],
       ['view', 'view own workspace'],
-      ['update', 'administer workspaces'],
       ['update', 'edit any workspace'],
       ['update', 'edit own workspace'],
-      ['delete', 'administer workspaces'],
       ['delete', 'delete any workspace'],
       ['delete', 'delete own workspace'],
     ];

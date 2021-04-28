@@ -39,7 +39,7 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
    */
   protected $untranslatableFieldName;
 
-  protected static $modules = ['language', 'entity_test'];
+  public static $modules = ['language', 'entity_test'];
 
   protected function setUp() {
     parent::setUp();
@@ -127,7 +127,7 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
       $field->set('translatable', $translatable);
       $field->save();
       $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
-      $this->assertEqual($translatable, $field->isTranslatable(), 'Field translatability changed.');
+      $this->assertEqual($field->isTranslatable(), $translatable, 'Field translatability changed.');
     }
     \Drupal::cache('entity')->deleteAll();
   }

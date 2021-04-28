@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
@@ -65,7 +66,7 @@ class SearchNumbersTest extends BrowserTestBase {
    */
   protected $nodes;
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
@@ -91,7 +92,7 @@ class SearchNumbersTest extends BrowserTestBase {
     // Run cron to ensure the content is indexed.
     $this->cronRun();
     $this->drupalGet('admin/reports/dblog');
-    $this->assertText('Cron run completed');
+    $this->assertText(t('Cron run completed'), 'Log shows cron run completed');
   }
 
   /**
@@ -109,13 +110,17 @@ class SearchNumbersTest extends BrowserTestBase {
 
       // Verify that the node title does not appear on the search page
       // with a dummy search.
-      $this->drupalPostForm('search/node', ['keys' => 'foo'], 'Search');
-      $this->assertNoText($node->label());
+      $this->drupalPostForm('search/node',
+        ['keys' => 'foo'],
+        t('Search'));
+      $this->assertNoText($node->label(), $type . ': node title not shown in dummy search');
 
       // Verify that the node title does appear as a link on the search page
       // when searching for the number.
-      $this->drupalPostForm('search/node', ['keys' => $number], 'Search');
-      $this->assertText($node->label());
+      $this->drupalPostForm('search/node',
+        ['keys' => $number],
+        t('Search'));
+      $this->assertText($node->label(), new FormattableMarkup('%type: node title shown (search found the node) in search for number %number.', ['%type' => $type, '%number' => $number]));
     }
   }
 

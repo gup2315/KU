@@ -26,7 +26,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['dblog', 'dblog_test_views', 'user'];
+  public static $modules = ['dblog', 'dblog_test_views', 'user'];
 
   /**
    * {@inheritdoc}
@@ -36,13 +36,13 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
+  protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
     $this->installEntitySchema('user');
     $this->installSchema('dblog', ['watchdog']);
 
-    ViewTestData::createTestViews(static::class, ['dblog_test_views']);
+    ViewTestData::createTestViews(get_class($this), ['dblog_test_views']);
   }
 
   /**
@@ -63,17 +63,15 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
       if (!isset($entry['variables'])) {
         continue;
       }
-      $message_vars = $entry['variables'];
-      unset($message_vars['link']);
-      $this->assertEqual(new FormattableMarkup($entry['message'], $message_vars), $view->style_plugin->getField($index, 'message'));
+      $this->assertEqual($view->style_plugin->getField($index, 'message'), new FormattableMarkup($entry['message'], $entry['variables']));
       $link_field = $view->style_plugin->getField($index, 'link');
       // The 3rd entry contains some unsafe markup that needs to get filtered.
       if ($index == 2) {
         // Make sure that unsafe link differs from the rendered link, so we know
         // that some filtering actually happened.
-        $this->assertNotEquals($entry['variables']['link'], $link_field);
+        $this->assertNotEqual($link_field, $entry['variables']['link']);
       }
-      $this->assertEqual(Xss::filterAdmin($entry['variables']['link']), $link_field);
+      $this->assertEqual($link_field, Xss::filterAdmin($entry['variables']['link']));
     }
 
     // Disable replacing variables and check that the tokens aren't replaced.
@@ -84,7 +82,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     $view->initStyle();
     $view->field['message']->options['replace_variables'] = FALSE;
     foreach ($entries as $index => $entry) {
-      $this->assertEqual($entry['message'], $view->style_plugin->getField($index, 'message'));
+      $this->assertEqual($view->style_plugin->getField($index, 'message'), $entry['message']);
     }
   }
 

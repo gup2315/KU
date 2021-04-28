@@ -20,7 +20,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'node',
     'content_moderation',
     'user',
@@ -52,7 +52,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->installSchema('node', 'node_access');
@@ -120,7 +120,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
       $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to deleted state.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual('There were errors validating the config synchronization.' . PHP_EOL . 'The moderation state Test two is being used, but is not in the source storage.', $e->getMessage());
+      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.' . PHP_EOL . 'The moderation state Test two is being used, but is not in the source storage.');
       $error_log = $this->configImporter->getErrors();
       $expected = ['The moderation state Test two is being used, but is not in the source storage.'];
       $this->assertEqual($expected, $error_log);
@@ -134,7 +134,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
       $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to deleted workflow.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual('There were errors validating the config synchronization.' . PHP_EOL . 'The moderation state Test two is being used, but is not in the source storage.' . PHP_EOL . 'The workflow Editorial is being used, and cannot be deleted.', $e->getMessage());
+      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.' . PHP_EOL . 'The moderation state Test two is being used, but is not in the source storage.' . PHP_EOL . 'The workflow Editorial is being used, and cannot be deleted.');
       $error_log = $this->configImporter->getErrors();
       $expected = [
         'The moderation state Test two is being used, but is not in the source storage.',

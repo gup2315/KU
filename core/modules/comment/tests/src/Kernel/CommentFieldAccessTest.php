@@ -31,7 +31,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['comment', 'entity_test', 'user'];
+  public static $modules = ['comment', 'entity_test', 'user'];
 
   /**
    * Fields that only users with administer comments permissions can change.
@@ -84,7 +84,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(['user', 'comment']);
     $this->installSchema('comment', ['comment_entity_statistics']);
@@ -272,7 +272,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       foreach ($permutations as $set) {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
-        $this->assertTrue($may_view, new FormattableMarkup('User @user can view field @field on comment @comment', [
+        $this->assertEqual($may_view, TRUE, new FormattableMarkup('User @user can view field @field on comment @comment', [
           '@user' => $set['user']->getAccountName(),
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,

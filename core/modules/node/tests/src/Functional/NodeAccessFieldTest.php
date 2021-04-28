@@ -17,7 +17,7 @@ class NodeAccessFieldTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node_access_test', 'field_ui'];
+  public static $modules = ['node_access_test', 'field_ui'];
 
   /**
    * {@inheritdoc}
@@ -45,7 +45,7 @@ class NodeAccessFieldTest extends NodeTestBase {
    */
   protected $fieldName;
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     node_access_rebuild();
@@ -95,12 +95,12 @@ class NodeAccessFieldTest extends NodeTestBase {
     // Log in as the administrator and confirm that the field value is present.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($value);
+    $this->assertText($value, 'The saved field value is visible to an administrator.');
 
     // Log in as the content admin and try to view the node.
     $this->drupalLogin($this->contentAdminUser);
     $this->drupalGet('node/' . $node->id());
-    $this->assertText('Access denied');
+    $this->assertText('Access denied', 'Access is denied for the content admin.');
 
     // Modify the field default as the content admin.
     $edit = [];
@@ -109,7 +109,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->drupalPostForm(
       "admin/structure/types/manage/page/fields/node.page.{$this->fieldName}",
       $edit,
-      'Save settings'
+      t('Save settings')
     );
 
     // Log in as the administrator.
@@ -117,11 +117,11 @@ class NodeAccessFieldTest extends NodeTestBase {
 
     // Confirm that the existing node still has the correct field value.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($value);
+    $this->assertText($value, 'The original field value is visible to an administrator.');
 
     // Confirm that the new default value appears when creating a new node.
     $this->drupalGet('node/add/page');
-    $this->assertRaw($default);
+    $this->assertRaw($default, 'The updated default value is displayed when creating a new node.');
   }
 
 }

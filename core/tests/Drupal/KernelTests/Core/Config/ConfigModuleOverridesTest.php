@@ -16,7 +16,7 @@ class ConfigModuleOverridesTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'config', 'config_override_test'];
+  public static $modules = ['system', 'config', 'config_override_test'];
 
   public function testSimpleModuleOverrides() {
     $GLOBALS['config_test_run_module_overrides'] = TRUE;
@@ -42,8 +42,8 @@ class ConfigModuleOverridesTest extends KernelTestBase {
     // creating simple configuration objects on the fly.
     $config = $config_factory->get('config_override_test.new');
     $this->assertTrue($config->isNew(), 'The configuration object config_override_test.new is new');
-    $this->assertSame('override', $config->get('module'));
-    $this->assertNull($config->getOriginal('module', FALSE));
+    $this->assertIdentical($config->get('module'), 'override');
+    $this->assertIdentical($config->getOriginal('module', FALSE), NULL);
 
     unset($GLOBALS['config_test_run_module_overrides']);
   }

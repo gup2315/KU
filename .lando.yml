@@ -1,0 +1,4 @@
+name: ku_d8
+recipe: drupal8
+config:
+  webroot: .

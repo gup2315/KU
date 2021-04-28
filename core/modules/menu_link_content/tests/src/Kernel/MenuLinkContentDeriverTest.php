@@ -18,7 +18,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'menu_link_content',
     'link',
     'system',
@@ -29,7 +29,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('user');
@@ -72,7 +72,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     $this->assertEqual('route_name_2', $tree_element->link->getRouteName());
     $title = $tree_element->link->getTitle();
     $this->assertNotInstanceOf(TranslatableMarkup::class, $title);
-    $this->assertSame('<script>alert("Welcome to the discovered jungle!")</script>', $title);
+    $this->assertIdentical('<script>alert("Welcome to the discovered jungle!")</script>', $title);
 
     // Create a hierarchy.
     \Drupal::state()->set('menu_link_content_dynamic_route.routes', [

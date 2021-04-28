@@ -18,11 +18,12 @@ class RenderElementTypesTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'router_test'];
+  public static $modules = ['system', 'router_test'];
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(['system']);
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**
@@ -44,7 +45,7 @@ class RenderElementTypesTest extends KernelTestBase {
     $out .= '</tr></table>';
     $this->verbose($out);
 
-    $this->assertSame($expected_html, $actual_html, Html::escape($message));
+    $this->assertIdentical($actual_html, $expected_html, Html::escape($message));
   }
 
   /**

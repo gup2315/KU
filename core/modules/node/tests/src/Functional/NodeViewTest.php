@@ -26,7 +26,7 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->toUrl());
 
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->setAbsolute()->toString());
 
     // Link relations are checked for access for anonymous users.
     $result = $this->xpath('//link[@rel = "version-history"]');
@@ -39,14 +39,14 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->toUrl());
 
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->setAbsolute()->toString());
 
     // Link relations are present regardless of access for authenticated users.
     $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertEqual($node->toUrl('version-history')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('version-history')->setAbsolute()->toString());
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($node->toUrl('edit-form')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->setAbsolute()->toString());
 
     // Give anonymous users access to edit the node. Do this through the UI to
     // ensure caches are handled properly.
@@ -61,13 +61,13 @@ class NodeViewTest extends NodeTestBase {
     // version-history link.
     $this->drupalGet($node->toUrl());
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->setAbsolute()->toString());
 
     $result = $this->xpath('//link[@rel = "version-history"]');
     $this->assertEmpty($result, 'Version history not present for anonymous users without access.');
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($node->toUrl('edit-form')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->setAbsolute()->toString());
   }
 
   /**
@@ -85,7 +85,7 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->toUrl());
 
     $links = $this->getSession()->getResponseHeaders()['Link'];
-    $this->assertEqual($expected, $links);
+    $this->assertEqual($links, $expected);
   }
 
   /**
@@ -93,13 +93,11 @@ class NodeViewTest extends NodeTestBase {
    */
   public function testMultiByteUtf8() {
     $title = '🐝';
-    // To ensure that the title has multi-byte characters, we compare the byte
-    // length to the character length.
-    $this->assertLessThan(strlen($title), mb_strlen($title, 'utf-8'));
+    $this->assertTrue(mb_strlen($title, 'utf-8') < strlen($title), 'Title has multi-byte characters.');
     $node = $this->drupalCreateNode(['title' => $title]);
     $this->drupalGet($node->toUrl());
     $result = $this->xpath('//span[contains(@class, "field--name-title")]');
-    $this->assertEqual($title, $result[0]->getText(), 'The passed title was returned.');
+    $this->assertEqual($result[0]->getText(), $title, 'The passed title was returned.');
   }
 
 }
