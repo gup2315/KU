@@ -800,7 +800,11 @@ $databases['default']['default'] = array (
   'username' => 'gusmateo_drup689',
   'password' => '3pv1S-!P88',
   'prefix' => 'dr5z_',
+<<<<<<< HEAD
   'host' => '127.0.0.1',
+=======
+  'host' => 'localhost',
+>>>>>>> 511ee95b9de886e3ddde092c0ece2558f472a7de
   'port' => '3306',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',

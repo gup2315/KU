@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 name: ku
+=======
+name: ku_d8
+>>>>>>> 511ee95b9de886e3ddde092c0ece2558f472a7de
 recipe: drupal8
 config:
   webroot: .
