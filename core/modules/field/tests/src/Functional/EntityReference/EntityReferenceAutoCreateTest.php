@@ -19,7 +19,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
   use EntityReferenceTestTrait;
 
-  protected static $modules = ['node', 'taxonomy', 'entity_test'];
+  public static $modules = ['node', 'taxonomy', 'entity_test'];
 
   /**
    * {@inheritdoc}
@@ -40,7 +40,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
    */
   protected $referencedType;
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     // Create "referencing" and "referenced" node types.
@@ -105,8 +105,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
    */
   public function testAutoCreate() {
     $this->drupalGet('node/add/' . $this->referencingType);
-    $target = $this->assertSession()->fieldExists("edit-test-field-0-target-id");
-    $this->assertTrue($target->hasClass("form-autocomplete"));
+    $this->assertFieldByXPath('//input[@id="edit-test-field-0-target-id" and contains(@class, "form-autocomplete")]', NULL, 'The autocomplete input element appears.');
 
     $new_title = $this->randomMachineName();
 
@@ -144,8 +143,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
     // Now try to view the node and check that the referenced node is shown.
     $this->drupalGet('node/' . $referencing_node->id());
-    $this->assertText($referencing_node->label());
-    $this->assertText($referenced_node->label());
+    $this->assertText($referencing_node->label(), 'Referencing node label found.');
+    $this->assertText($referenced_node->label(), 'Referenced node label found.');
   }
 
   /**

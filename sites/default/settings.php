@@ -115,6 +115,14 @@ $databases = [];
  * namespace. This is optional for projects managed with Composer if the
  * driver's namespace is in Composer's autoloader.
  *
+ * Transaction support is enabled by default for all drivers that support it,
+ * including MySQL. To explicitly disable it, set the 'transactions' key to
+ * FALSE.
+ * Note that some configurations of MySQL, such as the MyISAM engine, don't
+ * support it and will proceed silently even if enabled. If you experience
+ * transaction related crashes with such configuration, set the 'transactions'
+ * key to FALSE.
+ *
  * For each database, you may optionally specify multiple "target" databases.
  * A target database allows Drupal to try to send certain queries to a
  * different database if it can but fall back to the default connection if not.
@@ -230,9 +238,9 @@ $databases = [];
  * Sample Database configuration format for a driver in a contributed module:
  * @code
  *   $databases['default']['default'] = [
- *     'driver' => 'my_driver',
- *     'namespace' => 'Drupal\my_module\Driver\Database\my_driver',
- *     'autoload' => 'modules/my_module/src/Driver/Database/my_driver/',
+ *     'driver' => 'mydriver',
+ *     'namespace' => 'Drupal\mymodule\Driver\Database\mydriver',
+ *     'autoload' => 'modules/mymodule/src/Driver/Database/mydriver/',
  *     'database' => 'databasename',
  *     'username' => 'sqlusername',
  *     'password' => 'sqlpassword',
@@ -282,7 +290,7 @@ $databases = [];
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = 'Tl3HZB0LZ7QqlovqI1MDn-g3MAREM8siFVO_Qk2x2QUVzoy_EjMpHhWG62lkdFBvUiSTNlxkuw';
+$settings['hash_salt'] = 'Jz_zTnWONR5P7KiZ4CYwKHnCD04EDxY29GnHNmau9FpUR45gH8fgMEMI6JTQVxoXKsJ0Ti4Xgw';
 
 /**
  * Deployment identifier.
@@ -306,20 +314,6 @@ $settings['hash_salt'] = 'Tl3HZB0LZ7QqlovqI1MDn-g3MAREM8siFVO_Qk2x2QUVzoy_EjMpHh
  * TRUE back to a FALSE!
  */
 $settings['update_free_access'] = FALSE;
-
-/**
- * Fallback to HTTP for Update Manager.
- *
- * If your Drupal site fails to connect to updates.drupal.org using HTTPS to
- * fetch Drupal core, module and theme update status, you may uncomment this
- * setting and set it to TRUE to allow an insecure fallback to HTTP. Note that
- * doing so will open your site up to a potential man-in-the-middle attack. You
- * should instead attempt to resolve the issues before enabling this option.
- * @see https://www.drupal.org/docs/system-requirements/php-requirements#openssl
- * @see https://en.wikipedia.org/wiki/Man-in-the-middle_attack
- * @see \Drupal\update\UpdateFetcher
- */
-# $settings['update_fetch_with_http_fallback'] = TRUE;
 
 /**
  * External access proxy settings:
@@ -454,12 +448,34 @@ $settings['update_free_access'] = FALSE;
 /**
  * Class Loader.
  *
- * If the APCu extension is detected, the classloader will be optimized to use
- * it. Set to FALSE to disable this.
- *
- * @see https://getcomposer.org/doc/articles/autoloader-optimization.md
+ * If the APC extension is detected, the Symfony APC class loader is used for
+ * performance reasons. Detection can be prevented by setting
+ * class_loader_auto_detect to false, as in the example below.
  */
 # $settings['class_loader_auto_detect'] = FALSE;
+
+/*
+ * If the APC extension is not detected, either because APC is missing or
+ * because auto-detection has been disabled, auto-loading falls back to
+ * Composer's ClassLoader, which is good for development as it does not break
+ * when code is moved in the file system. You can also decorate the base class
+ * loader with another cached solution than the Symfony APC class loader, as
+ * all production sites should have a cached class loader of some sort enabled.
+ *
+ * To do so, you may decorate and replace the local $class_loader variable. For
+ * example, to use Symfony's APC class loader without automatic detection,
+ * uncomment the code below.
+ */
+/*
+if ($settings['hash_salt']) {
+  $prefix = 'drupal.' . hash('sha256', 'drupal.' . $settings['hash_salt']);
+  $apc_loader = new \Symfony\Component\ClassLoader\ApcClassLoader($prefix, $class_loader);
+  unset($prefix);
+  $class_loader->unregister();
+  $apc_loader->register();
+  $class_loader = $apc_loader;
+}
+*/
 
 /**
  * Authorized file system operations:
@@ -780,13 +796,13 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => 'gusmateo_d9',
-  'username' => 'gusmateo_d9',
-  'password' => '!b-0xS44pG',
-  'prefix' => 'drmv_',
-  'host' => 'localhost',
+  'database' => 'gusmateo_drup689',
+  'username' => 'gusmateo_drup689',
+  'password' => '3pv1S-!P88',
+  'prefix' => 'dr5z_',
+  'host' => '127.0.0.1',
   'port' => '3306',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
-$settings['config_sync_directory'] = 'sites/default/files/config_Ucp_vzxOvY6881ca_QMN0VDLLQDOOocqceT9HO6Hf_vlR7N9gN-fBo1LH9NpQ5O9c5NVM6jBTw/sync';
+$settings['config_sync_directory'] = 'sites/default/files/config_0ibz_h_0aVFRbN6gvdGIc0G3t1Xjd9HF19-fzS_OjnlcCtxuegMnRaOyKOyVQBP3DvF3E_vFww/sync';

@@ -15,7 +15,7 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'config',
     'config_transformer_test',
   ];
@@ -28,7 +28,7 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $permissions = [
@@ -61,11 +61,11 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
     $originalSlogan = $this->config('system.site')->get('slogan');
     $this->assertEmpty($originalSlogan);
     $newSlogan = $this->randomMachineName(16);
-    $this->assertNotEquals($originalSlogan, $newSlogan);
+    $this->assertNotEqual($newSlogan, $originalSlogan);
     $this->config('system.site')
       ->set('slogan', $newSlogan)
       ->save();
-    $this->assertEqual($newSlogan, $this->config('system.site')->get('slogan'));
+    $this->assertEqual($this->config('system.site')->get('slogan'), $newSlogan);
 
     // Tests changes of system.site.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
@@ -85,13 +85,13 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
     $this->assertText(Html::escape("name: 'Drupal Arrr'"));
     $this->assertText(Html::escape("slogan: '$originalSlogan Arrr'"));
-    $this->assertEqual('Drupal', $this->config('system.site')->get('name'));
-    $this->assertEqual($newSlogan, $this->config('system.site')->get('slogan'));
+    $this->assertEqual($this->config('system.site')->get('name'), 'Drupal');
+    $this->assertEqual($this->config('system.site')->get('slogan'), $newSlogan);
 
     // Sync the configuration.
     $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
-    $this->assertEqual('Drupal Arrr', $this->config('system.site')->get('name'));
-    $this->assertEqual($originalSlogan . " Arrr", $this->config('system.site')->get('slogan'));
+    $this->assertEqual($this->config('system.site')->get('name'), 'Drupal Arrr');
+    $this->assertEqual($this->config('system.site')->get('slogan'), $originalSlogan . " Arrr");
 
     // Assert that the event was dispatched again on the new config.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');

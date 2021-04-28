@@ -17,7 +17,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'locale'];
+  public static $modules = ['language', 'locale'];
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     // Add a default locale storage for all these tests.
     $this->storage = $this->container->get('locale.storage');
@@ -48,9 +48,9 @@ class LanguageLocaleListTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('The language French has been created and can now be used');
-    $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
+    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE])->toString());
     $this->rebuildContainer();
 
     // Translate Spanish language to French (Espagnol).
@@ -66,10 +66,11 @@ class LanguageLocaleListTest extends BrowserTestBase {
 
     // Get language list displayed in select list.
     $this->drupalGet('fr/admin/config/regional/language/add');
-    $options = $this->assertSession()->selectExists('edit-predefined-langcode')->findAll('css', 'option');
-    $options = array_map(function ($item) {
-      return $item->getText();
-    }, $options);
+    $option_elements = $this->xpath('//select[@id="edit-predefined-langcode/option"]');
+    $options = [];
+    foreach ($option_elements as $option_element) {
+      $options[] = $option_element->getText();
+    }
     // Remove the 'Custom language...' option form the end.
     array_pop($options);
     // Order language list.

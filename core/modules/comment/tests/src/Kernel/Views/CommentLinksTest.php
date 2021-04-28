@@ -23,7 +23,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test'];
+  public static $modules = ['entity_test'];
 
   /**
    * Views used by this test.
@@ -35,7 +35,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
+  protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 
     $this->installEntitySchema('entity_test');
@@ -82,7 +82,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
     $approve_comment = $view->style_plugin->getField(0, 'approve_comment');
     $options = ['query' => ['destination' => '/']];
     $url = Url::fromRoute('comment.approve', ['comment' => $comment->id()], $options);
-    $this->assertEqual((string) $approve_comment, Link::fromTextAndUrl('Approve', $url)->toString(), 'Found a comment approve link for an unapproved comment.');
+    $this->assertEqual(Link::fromTextAndUrl('Approve', $url)->toString(), (string) $approve_comment, 'Found a comment approve link for an unapproved comment.');
 
     // Approve the comment.
     $comment->setPublished();
@@ -182,7 +182,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
       'field_name' => 'comment',
       'pid' => $comment->id(),
     ]);
-    $this->assertEqual((string) $replyto_comment, Link::fromTextAndUrl('Reply', $url)->toString(), 'Found the comment reply link as an admin user.');
+    $this->assertEqual(Link::fromTextAndUrl('Reply', $url)->toString(), (string) $replyto_comment, 'Found the comment reply link as an admin user.');
 
     // Check if I can see the reply link as an anonymous user.
     $account_switcher->switchTo(new AnonymousUserSession());

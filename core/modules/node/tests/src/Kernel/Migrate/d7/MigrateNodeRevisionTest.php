@@ -25,7 +25,7 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'content_translation',
     'comment',
     'datetime',
@@ -44,7 +44,7 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->fileMigrationSetup();
@@ -102,7 +102,7 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
     $this->assertSame($title, $revision->getTitle());
     $this->assertSame($langcode, $revision->language()->getId());
     $this->assertSame($log, $revision->revision_log->value);
-    $this->assertSame($timestamp, $revision->getRevisionCreationTime());
+    $this->assertIdentical($timestamp, $revision->getRevisionCreationTime());
   }
 
   /**

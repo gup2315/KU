@@ -17,12 +17,12 @@ class FeedValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['aggregator', 'options'];
+  public static $modules = ['aggregator', 'options'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('aggregator_feed');
   }
@@ -54,10 +54,14 @@ class FeedValidationTest extends EntityKernelTestBase {
     $violations = $feed->validate();
 
     $this->assertCount(2, $violations);
-    $this->assertEqual('title', $violations[0]->getPropertyPath());
-    $this->assertEqual(t('A feed named %value already exists. Enter a unique title.', ['%value' => $feed->label()]), $violations[0]->getMessage());
-    $this->assertEqual('url', $violations[1]->getPropertyPath());
-    $this->assertEqual(t('A feed with this URL %value already exists. Enter a unique URL.', ['%value' => $feed->getUrl()]), $violations[1]->getMessage());
+    $this->assertEqual($violations[0]->getPropertyPath(), 'title');
+    $this->assertEqual($violations[0]->getMessage(), t('A feed named %value already exists. Enter a unique title.', [
+      '%value' => $feed->label(),
+    ]));
+    $this->assertEqual($violations[1]->getPropertyPath(), 'url');
+    $this->assertEqual($violations[1]->getMessage(), t('A feed with this URL %value already exists. Enter a unique URL.', [
+      '%value' => $feed->getUrl(),
+    ]));
   }
 
 }

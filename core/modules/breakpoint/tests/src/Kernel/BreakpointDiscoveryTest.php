@@ -16,13 +16,9 @@ class BreakpointDiscoveryTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
-    'system',
-    'breakpoint',
-    'breakpoint_module_test',
-  ];
+  public static $modules = ['system', 'breakpoint', 'breakpoint_module_test'];
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     \Drupal::service('theme_installer')->install(['breakpoint_theme_test']);
   }
@@ -89,7 +85,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
     }
 
     // Test that the order is as expected.
-    $this->assertSame(array_keys($expected_breakpoints), array_keys($breakpoints));
+    $this->assertIdentical(array_keys($expected_breakpoints), array_keys($breakpoints));
   }
 
   /**
@@ -192,7 +188,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
     ];
     $breakpoint_groups = \Drupal::service('breakpoint.manager')->getGroups();
     // Ensure the order is as expected. Should be sorted by label.
-    $this->assertEquals($expected, $breakpoint_groups);
+    $this->assertIdentical($expected, $this->castSafeStrings($breakpoint_groups));
 
     $expected = [
       'breakpoint_theme_test' => 'theme',
